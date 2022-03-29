@@ -30,21 +30,27 @@ def main():
     # (alias, full, allow_when_oneof, incompatible_with)
     cmds = [('k', 'kubectl', None, None)]
 
-    globs = [('sys', '--namespace=kube-system', None, ['sys'])]
+    globs = [
+		('sys', '--namespace=kube-system', None, ['sys']),
+		('dev', '--context=tfc-dev2', None, ['dev', 'test', 'stg', 'prod']),
+		('test', '--context=tfc-test', None, ['dev', 'test', 'stg', 'prod']),
+		('stg', '--context=tfc-stage', None, ['dev', 'test', 'stg', 'prod']),
+		('prod', '--context=tfc-prod', None, ['dev', 'test', 'stg', 'prod'])
+	]
 
     ops = [
-        ('a', 'apply --recursive -f', None, None),
-        ('ak', 'apply -k', None, ['sys']),
-        ('k', 'kustomize', None, ['sys']),
-        ('ex', 'exec -i -t', None, None),
+        #('a', 'apply --recursive -f', None, None),
+        #('ak', 'apply -k', None, ['sys']),
+        #('k', 'kustomize', None, ['sys']),
+        #('ex', 'exec -i -t', None, None),
         ('lo', 'logs -f', None, None),
-        ('lop', 'logs -f -p', None, None),
-        ('p', 'proxy', None, ['sys']),
-        ('pf', 'port-forward', None, ['sys']),
+        #('lop', 'logs -f -p', None, None),
+        #('p', 'proxy', None, ['sys']),
+        #('pf', 'port-forward', None, ['sys']),
         ('g', 'get', None, None),
         ('d', 'describe', None, None),
-        ('rm', 'delete', None, None),
-        ('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, None),
+        #('rm', 'delete', None, None),
+        #('run', 'run --rm --restart=Never --image-pull-policy=IfNotPresent -i -t', None, None),
         ]
 
     res = [
@@ -54,21 +60,21 @@ def main():
         ('ing', 'ingress', ['g', 'd', 'rm'], None),
         ('cm', 'configmap', ['g', 'd', 'rm'], None),
         ('sec', 'secret', ['g', 'd', 'rm'], None),
+        ('cj', 'cronjob', ['g', 'd', 'rm'], None),
+        ('job', 'job', ['g', 'd', 'rm'], None),
         ('no', 'nodes', ['g', 'd'], ['sys']),
-        ('ns', 'namespaces', ['g', 'd', 'rm'], ['sys']),
+        #('ns', 'namespaces', ['g', 'd', 'rm'], ['sys']),
         ]
     res_types = [r[0] for r in res]
 
     args = [
-        ('oyaml', '-o=yaml', ['g'], ['owide', 'ojson', 'sl']),
-        ('owide', '-o=wide', ['g'], ['oyaml', 'ojson']),
-        ('ojson', '-o=json', ['g'], ['owide', 'oyaml', 'sl']),
-        ('all', '--all-namespaces', ['g', 'd'], ['rm', 'f', 'no', 'sys'
-         ]),
-        ('sl', '--show-labels', ['g'], ['oyaml', 'ojson']
-         + diff(res_types, ['po', 'dep'])),
-        ('all', '--all', ['rm'], None), # caution: reusing the alias
-        ('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
+        #('oyaml', '-o=yaml', ['g'], ['owide', 'ojson', 'sl']),
+        #('owide', '-o=wide', ['g'], ['oyaml', 'ojson']),
+        #('ojson', '-o=json', ['g'], ['owide', 'oyaml', 'sl']),
+        #('all', '--all-namespaces', ['g', 'd'], ['rm', 'f', 'no', 'sys']),
+        ('sl', '--show-labels', ['g'], ['oyaml', 'ojson'] + diff(res_types, ['po', 'dep'])),
+        #('all', '--all', ['rm'], None), # caution: reusing the alias
+        #('w', '--watch', ['g'], ['oyaml', 'ojson', 'owide']),
         ]
 
     # these accept a value, so they need to be at the end and
